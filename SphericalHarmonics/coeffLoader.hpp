@@ -9,11 +9,7 @@
 #ifndef coeffLoader_hpp
 #define coeffLoader_hpp
 
-#include <stdio.h>
 #include <string>
-// basic file operations
-#include <iostream>
-#include <fstream>
 
 using namespace std;
 

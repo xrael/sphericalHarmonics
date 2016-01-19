@@ -7,6 +7,12 @@
 //
 
 #include "coeffLoader.hpp"
+#include <stdio.h>
+#include <string>
+// basic file operations
+#include <iostream>
+#include <fstream>
+
 
 ///-------------------------------coeffLoader--------------------------------///
 coeffLoader::coeffLoader()

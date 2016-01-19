@@ -8,6 +8,10 @@
 
 #include "sphericalHarmonics.hpp"
 
+#include <string>
+#include <math.h>
+#include "coeffLoader.hpp"
+
 
 ///---------------------------Constructors-------------------------///
 
