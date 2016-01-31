@@ -17,6 +17,28 @@
 ///---------------------------Constructors-------------------------///
 
 /*!
+ @brief Default constructor.
+ */
+sphericalHarmonics::sphericalHarmonics(void) :
+    _maxDegree(0),
+    _referenceRadius(0),
+    _mu(0),
+    _C_bar(nullptr),
+    _S_bar(nullptr),
+    _A_bar(nullptr),
+    _Re(nullptr),
+    _Im(nullptr),
+    _N1(nullptr),
+    _N2(nullptr),
+    _Nquot_1(nullptr),
+    _Nquot_2(nullptr),
+    _errorMessage(""),
+    _coeffLoader(nullptr)
+{
+    return;
+}
+
+/*!
  @brief Constructor using parameters. Check getLastError() after calling.
  @param[in] loader Object that loads the coefficients from a file into memory. This scheme provides a file-format independent way to load the coefficients from a file. The implementation is hidden in the loader.
  @param[in] filename Route to the file of coefficients.
@@ -36,7 +58,8 @@ sphericalHarmonics::sphericalHarmonics(coeffLoader* loader, const std::string& f
     _N1(nullptr),
     _N2(nullptr),
     _Nquot_1(nullptr),
-    _Nquot_2(nullptr)
+    _Nquot_2(nullptr),
+    _errorMessage("")
 {
     bool ret = true;
     
@@ -65,7 +88,7 @@ sphericalHarmonics::sphericalHarmonics(coeffLoader* loader, const std::string& f
 }
 
 /*!
- @ Constructor using copy.
+ @ Copy constructor.
  @param hg Object to be copied.
  */
 sphericalHarmonics::sphericalHarmonics(const sphericalHarmonics& hg) :
@@ -78,9 +101,12 @@ sphericalHarmonics::sphericalHarmonics(const sphericalHarmonics& hg) :
     _N1(nullptr),
     _N2(nullptr),
     _Nquot_1(nullptr),
-    _Nquot_2(nullptr)
+    _Nquot_2(nullptr),
+    _errorMessage(hg._errorMessage)
 {
     bool ret = true;
+    
+    _coeffLoader = hg._coeffLoader; // Only copies the pointer
     
     ret &= sphericalHarmonics::allocateArray(&this->_C_bar, this->_maxDegree);
     ret &= sphericalHarmonics::allocateArray(&this->_S_bar, this->_maxDegree);
@@ -96,7 +122,7 @@ sphericalHarmonics::sphericalHarmonics(const sphericalHarmonics& hg) :
         return;
     }
     
-    sphericalHarmonics::copy(hg);
+    this->copy(hg);
     
     return;
 }
@@ -106,6 +132,23 @@ sphericalHarmonics::sphericalHarmonics(const sphericalHarmonics& hg) :
 sphericalHarmonics::~sphericalHarmonics()
 {
     this->deallocate();
+}
+
+///----------------------------Overloaded operators--------------------------///
+sphericalHarmonics& sphericalHarmonics::operator=(const sphericalHarmonics& hg)
+{
+    if (&hg == this)
+        return *this;
+    
+    this->_maxDegree = hg._maxDegree;
+    this->_referenceRadius = hg._referenceRadius;
+    this->_mu = hg._mu;
+    
+    this->_coeffLoader = hg._coeffLoader; // Only copies the pointer
+    
+    this->copy(hg);
+    
+    return *this;
 }
 
 ///------------------------------------Getters--------------------------------///

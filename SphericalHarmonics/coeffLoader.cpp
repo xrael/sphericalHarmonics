@@ -21,16 +21,31 @@ coeffLoader::coeffLoader()
     this->_errorMessage = std::string("");
 }
 
+coeffLoader::coeffLoader(const coeffLoader& x)
+{
+    this->_errorMessage = x.getLastErrorMessage();
+}
+
 coeffLoader::~coeffLoader()
 {
     
+}
+
+coeffLoader& coeffLoader::operator=(const coeffLoader& x)
+{
+    if (&x == this)
+        return *this;
+    
+    this->_errorMessage = x.getLastErrorMessage();
+    
+    return *this;
 }
 
 /*!
  @brief Use this method to get the last error message.
  @return A string with the message.
  */
-std::string coeffLoader::getLastErrorMessage(void)
+std::string coeffLoader::getLastErrorMessage(void) const
 {
     return this->_errorMessage;
 }

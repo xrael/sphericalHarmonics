@@ -18,10 +18,14 @@ class coeffLoader
 {
 public:
     coeffLoader();
+    coeffLoader(const coeffLoader& x);
     virtual ~coeffLoader();
     virtual bool load(const std::string& filename, double** C_bar, double** S_bar, unsigned int* max_degree) = 0;
     
-    std::string getLastErrorMessage(void);
+    //Overloaded operators
+    coeffLoader& operator=(const coeffLoader& x);
+    
+    std::string getLastErrorMessage(void) const;
     
 protected:
     std::string _errorMessage;
@@ -48,7 +52,7 @@ public:
     coeffLoaderCSV();
     virtual ~coeffLoaderCSV();
     virtual bool load(const std::string& filename, double** C_bar, double** S_bar, unsigned int* max_degree);
-    
+
 private:
     //unsigned char _separationChar;
 };

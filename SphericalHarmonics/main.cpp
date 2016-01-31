@@ -44,6 +44,12 @@ int main(int argc, const char * argv[]) {
     
     sphericalHarmonics* sphericalHarm = new sphericalHarmonics(loader, coefficient_file, degree, mu, radius);
     
+    //Copy test
+    sphericalHarmonics* otherSpherical = new sphericalHarmonics(*sphericalHarm);
+    
+    sphericalHarmonics oneAnotherSpherical = *sphericalHarm; //Copy!
+    
+    
 #ifdef DEBUG
     sphericalHarm->printCoefficients();
     sphericalHarm->computeField(pos, degree, acc, true);
@@ -51,6 +57,16 @@ int main(int argc, const char * argv[]) {
     sphericalHarm->getFieldVector(pos_vec, degree, acc_vec, true);
     printf("Position [%f,%f,%f]. Field Vector: [%f,%f,%f].\n", pos_vec[0], pos_vec[1], pos_vec[2], acc_vec[0], acc_vec[1], acc_vec[2]);
 
+    otherSpherical->computeField(pos, degree, acc, true);
+    printf("Position [%.15f,%.15f,%.15f]. Field: [%.15f,%.15f,%.15f].\n", pos[0], pos[1], pos[2], acc[0], acc[1], acc[2]);
+    otherSpherical->getFieldVector(pos_vec, degree, acc_vec, true);
+    printf("Position [%f,%f,%f]. Field Vector: [%f,%f,%f].\n", pos_vec[0], pos_vec[1], pos_vec[2], acc_vec[0], acc_vec[1], acc_vec[2]);
+    
+    oneAnotherSpherical.computeField(pos, degree, acc, true);
+    printf("Position [%.15f,%.15f,%.15f]. Field: [%.15f,%.15f,%.15f].\n", pos[0], pos[1], pos[2], acc[0], acc[1], acc[2]);
+    oneAnotherSpherical.getFieldVector(pos_vec, degree, acc_vec, true);
+    printf("Position [%f,%f,%f]. Field Vector: [%f,%f,%f].\n", pos_vec[0], pos_vec[1], pos_vec[2], acc_vec[0], acc_vec[1], acc_vec[2]);
+    
     
 #else
     double R = 7000000.0; // [m]

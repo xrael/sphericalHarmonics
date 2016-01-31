@@ -28,9 +28,13 @@
 class sphericalHarmonics
 {
 public:
+    sphericalHarmonics();
     sphericalHarmonics(coeffLoader* loader, const std::string& filename, const unsigned int max_degree, const double mu, const double reference_radius);
     sphericalHarmonics(const sphericalHarmonics& x);
     virtual ~sphericalHarmonics();
+    
+    //Overloaded operators
+    sphericalHarmonics& operator=(const sphericalHarmonics& hg);
     
     // Getters
     double          getClm(const unsigned int degree, const unsigned int order) const;
