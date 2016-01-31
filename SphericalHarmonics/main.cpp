@@ -10,6 +10,7 @@
 #include "sphericalHarmonics.hpp"
 #include "coeffLoader.hpp"
 #include <math.h>
+#include <vector>
 
 
 int main(int argc, const char * argv[]) {
@@ -27,14 +28,19 @@ int main(int argc, const char * argv[]) {
     
     double pos[3], acc[3];
     
+    std::vector<double> pos_vec(3), acc_vec(3);
     
-    std::string coefficient_file = "/Users/manu/Library/Mobile Documents/com~apple~CloudDocs/CU-Boulder/AVS-Lab/Spherical Harmonics/coefficients/EGM2008_to2190_TideFree";
+    
+    std::string coefficient_file = "/Users/manu/Library/Mobile Documents/com~apple~CloudDocs/CU-Boulder/AVS-Lab/Spherical Harmonics/coefficients/GGM03S.txt";
 
     pos[0] = 7000000.0; //32.0;//6378136.3;
     pos[1] = 0.0;
     pos[2] = 0.0;
+    pos_vec[0] = pos[0];
+    pos_vec[1] = pos[1];
+    pos_vec[2] = pos[2];
     
-    coeffLoaderCSV* loader = new coeffLoaderCSV(' ');
+    coeffLoaderCSV* loader = new coeffLoaderCSV();
     
     sphericalHarmonics* sphericalHarm = new sphericalHarmonics(loader, coefficient_file, degree, mu, radius);
     
@@ -42,6 +48,10 @@ int main(int argc, const char * argv[]) {
     sphericalHarm->printCoefficients();
     sphericalHarm->computeField(pos, degree, acc, true);
     printf("Position [%.15f,%.15f,%.15f]. Field: [%.15f,%.15f,%.15f].\n", pos[0], pos[1], pos[2], acc[0], acc[1], acc[2]);
+    sphericalHarm->getFieldVector(pos_vec, degree, acc_vec, true);
+    printf("Position [%f,%f,%f]. Field Vector: [%f,%f,%f].\n", pos_vec[0], pos_vec[1], pos_vec[2], acc_vec[0], acc_vec[1], acc_vec[2]);
+
+    
 #else
     double R = 7000000.0; // [m]
     unsigned int samples = 10;
@@ -56,14 +66,26 @@ int main(int argc, const char * argv[]) {
             pos[0] = R * cos(latitude) * cos(longitude);
             pos[1] = R * cos(latitude)* sin(longitude);
             pos[2] = R * sin(latitude);
+            pos_vec[0] = pos[0];
+            pos_vec[1] = pos[1];
+            pos_vec[2] = pos[2];
             
             sphericalHarm->computeField(pos, degree, acc, true);
             
             printf("Latitude: %f, Longitude: %f\n", latitude*180.0/M_PI, longitude*180.0/M_PI);
             printf("Position [%f,%f,%f]. Field: [%f,%f,%f].\n", pos[0], pos[1], pos[2], acc[0], acc[1], acc[2]);
+            
+            sphericalHarm->getFieldVector(pos_vec, degree, acc_vec, true);
+            
+            printf("Latitude: %f, Longitude: %f\n", latitude*180.0/M_PI, longitude*180.0/M_PI);
+            printf("Position [%f,%f,%f]. Field Vector: [%f,%f,%f].\n", pos_vec[0], pos_vec[1], pos_vec[2], acc_vec[0], acc_vec[1], acc_vec[2]);
         }
     }
 #endif
+    
+    delete sphericalHarm;
+    
+    delete loader;
     
     return 0;
 }

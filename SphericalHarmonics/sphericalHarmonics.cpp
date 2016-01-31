@@ -9,6 +9,7 @@
 #include "sphericalHarmonics.hpp"
 
 #include <string>
+#include <vector>
 #include <math.h>
 #include "coeffLoader.hpp"
 
@@ -23,7 +24,7 @@
  @param[in] mu Gravitational parameter.
  @param[in] reference_radius Radius of reference with which the coefficients are computed. It must be given along with the coefficients.
  */
-sphericalHarmonics::sphericalHarmonics(coeffLoader* loader, const string& filename, const unsigned int max_degree, const double mu, const double reference_radius) :
+sphericalHarmonics::sphericalHarmonics(coeffLoader* loader, const std::string& filename, const unsigned int max_degree, const double mu, const double reference_radius) :
     _maxDegree(max_degree),
     _referenceRadius(reference_radius),
     _mu(mu),
@@ -277,12 +278,38 @@ void sphericalHarmonics::computeField(const double pos[3], unsigned int degree, 
     acc[2] = a3 + u * a4;
 }
 
+/*!
+ @brief Use to compute the field in position pos, given in a body frame.
+ @param[in] pos Position in which the field is to be computed.
+ @param[in] degree used to compute the field.
+ @param[out] acc Vector including the computed field.
+ @param[in] include_zero_degree Boolean that determines whether the zero-degree term is included.
+ @return acc
+ */
+std::vector<double> sphericalHarmonics::getFieldVector(const std::vector<double>& pos, unsigned int degree, std::vector<double>& acc, bool include_zero_degree) const
+{
+    double pos_array[3];
+    double acc_array[3];
+    
+    pos_array[0] = pos[0];
+    pos_array[1] = pos[1];
+    pos_array[2] = pos[2];
+    
+    this->computeField(pos_array, degree, acc_array, include_zero_degree);
+    
+    acc[0] = acc_array[0];
+    acc[1] = acc_array[1];
+    acc[2] = acc_array[2];
+    
+    return acc;
+}
+
 
 /*!
  @brief Use this method to get the last error message.
  @return A string with the message.
  */
-string sphericalHarmonics::getLastErrorMessage(void)
+std::string sphericalHarmonics::getLastErrorMessage(void)
 {
     return this->_errorMessage;
 }
@@ -497,7 +524,7 @@ void sphericalHarmonics::deallocateArray(double** a, const unsigned int degree)
             }
         }
         delete[] a;
-        *a = nullptr;
+        a = nullptr;
     }
     
     return;
