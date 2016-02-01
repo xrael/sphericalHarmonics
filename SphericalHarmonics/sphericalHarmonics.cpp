@@ -32,8 +32,8 @@ sphericalHarmonics::sphericalHarmonics(void) :
     _N2(nullptr),
     _Nquot_1(nullptr),
     _Nquot_2(nullptr),
-    _errorMessage(""),
-    _coeffLoader(nullptr)
+    _coeffLoader(nullptr),
+    _errorMessage("")
 {
     return;
 }
@@ -106,7 +106,7 @@ sphericalHarmonics::sphericalHarmonics(const sphericalHarmonics& hg) :
 {
     bool ret = true;
     
-    _coeffLoader = hg._coeffLoader; // Only copies the pointer
+    _coeffLoader = hg._coeffLoader; // Only copies the pointer (same object)
     
     ret &= sphericalHarmonics::allocateArray(&this->_C_bar, this->_maxDegree);
     ret &= sphericalHarmonics::allocateArray(&this->_S_bar, this->_maxDegree);
@@ -144,6 +144,8 @@ sphericalHarmonics& sphericalHarmonics::operator=(const sphericalHarmonics& hg)
     this->_referenceRadius = hg._referenceRadius;
     this->_mu = hg._mu;
     
+    this->_errorMessage = hg._errorMessage;
+    
     this->_coeffLoader = hg._coeffLoader; // Only copies the pointer
     
     this->copy(hg);
@@ -176,6 +178,15 @@ double sphericalHarmonics::getReferenceRadius() const
 double sphericalHarmonics::getGravitationalParameter() const
 {
     return this->_mu;
+}
+
+///------------------------------------Setters--------------------------------///
+/*
+ @brief This setter does not destroy the loader since its life is independent of the spherical harmonics existance. It's an aggregation more than a composition.
+ */
+void sphericalHarmonics::setCoefficientLoader(coeffLoader* loader)
+{
+    this->_coeffLoader = loader;
 }
 
 ///---------------------------------Main Interface----------------------------///
@@ -322,7 +333,7 @@ void sphericalHarmonics::computeField(const double pos[3], unsigned int degree, 
 }
 
 /*!
- @brief Use to compute the field in position pos, given in a body frame.
+ @brief Use to compute the field in position pos, given in a body frame (uses Vectors instead of arrays). It's a wrapper of computeField().
  @param[in] pos Position in which the field is to be computed.
  @param[in] degree used to compute the field.
  @param[out] acc Vector including the computed field.

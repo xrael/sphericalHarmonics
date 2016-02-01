@@ -50,6 +50,7 @@ class coeffLoaderCSV : public coeffLoader
 {
 public:
     coeffLoaderCSV();
+    coeffLoaderCSV(const coeffLoaderCSV& x);
     virtual ~coeffLoaderCSV();
     virtual bool load(const std::string& filename, double** C_bar, double** S_bar, unsigned int* max_degree);
 

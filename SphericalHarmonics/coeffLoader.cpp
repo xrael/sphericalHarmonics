@@ -102,6 +102,12 @@ coeffLoaderCSV::coeffLoaderCSV() :
     
 }
 
+coeffLoaderCSV::coeffLoaderCSV(const coeffLoaderCSV& x) :
+    coeffLoader(x)
+{
+    
+}
+
 coeffLoaderCSV::~coeffLoaderCSV()
 {
     

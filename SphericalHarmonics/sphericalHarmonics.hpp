@@ -43,6 +43,9 @@ public:
     double          getReferenceRadius() const;
     double          getGravitationalParameter() const;
     
+    // Setters
+    void setCoefficientLoader(coeffLoader* loader);
+    
     // The important method!!
     void            computeField(const double pos[3], unsigned int degree, double  acc[3], bool include_zero_degree) const;
     
